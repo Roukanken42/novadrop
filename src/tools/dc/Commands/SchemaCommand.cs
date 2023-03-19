@@ -81,7 +81,7 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
             "Gather data sheet files",
             () => Task.FromResult(
                 new DirectoryInfo(settings.Input)
-                    .EnumerateFiles("?*.xml", SearchOption.AllDirectories)
+                    .EnumerateFiles("?*.?*", SearchOption.AllDirectories)
                     .OrderBy(f => f.FullName, StringComparer.Ordinal)
                     .Select((f, i) => (Index: i, File: f))
                     .ToArray()));
