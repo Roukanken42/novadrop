@@ -44,6 +44,14 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         }
     }
 
+    protected override Task PreExecuteAsync(
+        dynamic expando, SchemaCommandSettings settings, CancellationToken cancellationToken)
+    {
+        expando.Handler = new DataSheetValidationHandler();
+
+        return Task.CompletedTask;
+    }
+
     protected override async Task<int> ExecuteAsync(
         dynamic expando, SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
     {
@@ -69,29 +77,77 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         Log.MarkupLineInterpolated(
             $"Inferring data sheet schemas of [cyan]{settings.Input}[/] to [cyan]{settings.Output}[/] with strategy [cyan]{settings.Strategy}[/]...");
 
-        var root = await progress.RunTaskAsync(
-            "Load data center",
-            async () =>
-            {
-                await using var inStream = File.OpenRead(settings.Input);
+        var files = await progress.RunTaskAsync(
+            "Gather data sheet files",
+            () => Task.FromResult(
+                new DirectoryInfo(settings.Input)
+                    .EnumerateFiles("?*.xml", SearchOption.AllDirectories)
+                    .OrderBy(f => f.FullName, StringComparer.Ordinal)
+                    .Select((f, i) => (Index: i, File: f))
+                    .ToArray()));
 
-                return await DataCenter.LoadAsync(
-                    inStream,
-                    new DataCenterLoadOptions()
-                        .WithKey(settings.DecryptionKey.Span)
-                        .WithIV(settings.DecryptionIV.Span)
-                        .WithStrict(settings.Strict)
-                        .WithLoaderMode(DataCenterLoaderMode.Eager)
-                        .WithMutability(DataCenterMutability.Immutable),
-                    cancellationToken);
-            });
+        var handler = (DataSheetValidationHandler)expando.Handler;
+
+        var nodes = await progress.RunTaskAsync(
+            "Load data sheets",
+            files.Length,
+            increment => Task.WhenAll(
+                files
+                    .AsParallel()
+                    .WithCancellation(cancellationToken)
+                    .Select(item => Task.Run(
+                        async () =>
+                        {
+                            var file = item.File;
+                            var xmlSettings = new XmlReaderSettings { Async = true };
+
+                            using var reader = XmlReader.Create(file.FullName, xmlSettings);
+
+                            XDocument doc;
+
+                            try
+                            {
+                                doc = await XDocument.LoadAsync(reader, LoadOptions.None, cancellationToken);
+                            }
+                            catch (XmlException ex)
+                            {
+                                handler.HandleException(file, ex);
+
+                                return default;
+                            }
+
+                            increment();
+                            return doc.Root;
+                        },
+                        cancellationToken))));
+        var nonNullNodes = from node in nodes where node is not null select node;
+        var inferable = new XmlInferableList(nonNullNodes.ToList());
+
+        // var root = await progress.RunTaskAsync(
+        //     "Load data center",
+        //     async () =>
+        //     {
+        //         await using var inStream = File.OpenRead(settings.Input);
+        //
+        //         return await DataCenter.LoadAsync(
+        //             inStream,
+        //             new DataCenterLoadOptions()
+        //                 .WithKey(settings.DecryptionKey.Span)
+        //                 .WithIV(settings.DecryptionIV.Span)
+        //                 .WithStrict(settings.Strict)
+        //                 .WithLoaderMode(DataCenterLoaderMode.Eager)
+        //                 .WithMutability(DataCenterMutability.Immutable),
+        //             cancellationToken);
+        //     });
+        //
+        // var inferable = new DataCenterInferableNode(root);
 
         var schema = await progress.RunTaskAsync(
             "Infer data sheet schemas",
-            root.Children.Count,
+            inferable.Children.Count,
             increment =>
                 Task.FromResult(
-                    DataCenterSchemaInference.Infer(settings.Strategy, new DataCenterInferableNode(root), increment, cancellationToken)));
+                    DataCenterSchemaInference.Infer(settings.Strategy, inferable, increment, cancellationToken)));
 
         var output = new DirectoryInfo(settings.Output);
 
@@ -292,5 +348,13 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         }
 
         await textWriter.WriteLineAsync();
+    }
+
+    protected override Task PostExecuteAsync(
+        dynamic expando, SchemaCommandSettings settings, CancellationToken cancellationToken)
+    {
+        expando.Handler.Print();
+
+        return Task.CompletedTask;
     }
 }
