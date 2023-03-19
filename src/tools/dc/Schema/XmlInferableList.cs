@@ -40,8 +40,8 @@ internal partial class XmlInferableList : IInferableNode
             return value switch
             {
                 "true" or "false" => DataCenterTypeCode.Boolean,
-                var x when IntRegex().IsMatch(x) => DataCenterTypeCode.Int32,
-                var x when SingleRegex().IsMatch(x) => DataCenterTypeCode.Single,
+                var x when IntRegex().IsMatch(x) && int.TryParse(x, out _) => DataCenterTypeCode.Int32,
+                var x when SingleRegex().IsMatch(x) && float.TryParse(x, out _) => DataCenterTypeCode.Single,
                 _ => DataCenterTypeCode.String,
             };
         }
