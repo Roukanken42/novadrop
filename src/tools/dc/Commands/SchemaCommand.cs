@@ -91,7 +91,7 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
             root.Children.Count,
             increment =>
                 Task.FromResult(
-                    DataCenterSchemaInference.Infer(settings.Strategy, root, increment, cancellationToken)));
+                    DataCenterSchemaInference.Infer(settings.Strategy, new DataCenterInferableNode(root), increment, cancellationToken)));
 
         var output = new DirectoryInfo(settings.Output);
 

@@ -3,7 +3,7 @@ namespace Vezel.Novadrop.Schema;
 internal static class DataCenterSchemaInference
 {
     public static DataCenterNodeSchema Infer(
-        DataCenterSchemaStrategy strategy, DataCenterNode root, Action increment, CancellationToken cancellationToken)
+        DataCenterSchemaStrategy strategy, IInferableNode root, Action increment, CancellationToken cancellationToken)
     {
         var nodeSchema = new DataCenterNodeSchema();
 
@@ -14,7 +14,7 @@ internal static class DataCenterSchemaInference
 
     private static void InferSchema(
         DataCenterSchemaStrategy strategy,
-        DataCenterNode node,
+        IInferableNode node,
         DataCenterNodeSchema nodeSchema,
         bool nodeExistedBefore,
         Action? increment,
@@ -32,7 +32,7 @@ internal static class DataCenterSchemaInference
             nodeSchema.HasValue = true;
 
         nodeSchema.UpdateAttributeBounds(
-            nodeExistedBefore, node.Attributes.ToDictionary(item => item.Key, item => item.Value.TypeCode));
+            nodeExistedBefore, node.Attributes.ToDictionary(item => item.Key, item => item.TypeCode));
 
         var childCounts = new Dictionary<string, int>();
 
