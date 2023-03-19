@@ -87,7 +87,7 @@ internal sealed class DataCenterNodeSchema
     {
         return (first, second) switch
         {
-            var (a, b) when a == b => a,
+            var (l, r) when l == r => l,
             (DataCenterTypeCode.Int32, DataCenterTypeCode.Single) or (DataCenterTypeCode.Single, DataCenterTypeCode.Int32) => DataCenterTypeCode.Single,
             _ => DataCenterTypeCode.String,
         };

@@ -1,15 +1,15 @@
 ﻿namespace Vezel.Novadrop.Schema;
 
-internal interface IInferableNode
+internal interface ISchemaInferable
 {
-    internal interface IInferableKeys
+    internal interface IKeys
     {
         bool HasAttributeNames { get; }
 
         IEnumerable<string> AttributeNames { get; }
     }
 
-    internal interface IInferableAttribute
+    internal interface IAttribute
     {
         string Key { get; }
 
@@ -18,11 +18,11 @@ internal interface IInferableNode
 
     string Name { get; }
 
-    IInferableKeys? Keys { get; }
+    IKeys? Keys { get; }
 
     string? Value { get; }
 
-    IEnumerable<IInferableAttribute> Attributes { get; }
+    IEnumerable<IAttribute> Attributes { get; }
 
-    IReadOnlyCollection<IInferableNode> Children { get; }
+    IReadOnlyCollection<ISchemaInferable> Children { get; }
 }

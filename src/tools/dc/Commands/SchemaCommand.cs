@@ -81,16 +81,16 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         Log.MarkupLineInterpolated(
             $"Inferring data sheet schemas of [cyan]{settings.Input}[/] to [cyan]{settings.Output}[/] with strategy [cyan]{settings.Strategy}[/]...");
 
-        IInferableNode inferable = settings.Unpacked
+        ISchemaInferable schemaInferable = settings.Unpacked
             ? await LoadXmlInferableAsync(expando, settings, progress, cancellationToken)
             : await LoadDataCenterInferableAsync(settings, progress, cancellationToken);
 
         var schema = await progress.RunTaskAsync(
             "Infer data sheet schemas",
-            inferable.Children.Count,
+            schemaInferable.Children.Count,
             increment =>
                 Task.FromResult(
-                    DataCenterSchemaInference.Infer(settings.Strategy, inferable, increment, cancellationToken)));
+                    DataCenterSchemaInference.Infer(settings.Strategy, schemaInferable, increment, cancellationToken)));
 
         var output = new DirectoryInfo(settings.Output);
 
@@ -144,7 +144,7 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         return 0;
     }
 
-    private static async Task<IInferableNode> LoadDataCenterInferableAsync(SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
+    private static async Task<ISchemaInferable> LoadDataCenterInferableAsync(SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
     {
         var root = await progress.RunTaskAsync(
             "Load data center",
@@ -163,10 +163,10 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
                     cancellationToken);
             });
 
-        return new DataCenterInferableNode(root);
+        return new DataCenterSchemaInferable(root);
     }
 
-    private static async Task<IInferableNode> LoadXmlInferableAsync(dynamic expando, SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
+    private static async Task<ISchemaInferable> LoadXmlInferableAsync(dynamic expando, SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
     {
         var files = await progress.RunTaskAsync(
             "Gather data sheet files",
@@ -212,7 +212,7 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
                         cancellationToken))));
 
         var nonNullNodes = from node in nodes where node is not null select node;
-        return new XmlInferableList(nonNullNodes.ToList());
+        return new XmlSchemaInferable(nonNullNodes.ToList());
     }
 
     private static async Task WriteSchemaAsync(
