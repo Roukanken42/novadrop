@@ -1,6 +1,6 @@
 ﻿namespace Vezel.Novadrop.Schema;
 
-internal class XmlInferableList : IInferableNode
+internal partial class XmlInferableList : IInferableNode
 {
     internal class XmlInferableElement : IInferableNode
     {
@@ -22,7 +22,7 @@ internal class XmlInferableList : IInferableNode
         public IReadOnlyCollection<IInferableNode> Children => _element.Elements().Select(child => new XmlInferableElement(child)).ToList();
     }
 
-    public class XmlInferableAttribute : IInferableNode.IInferableAttribute
+    public partial class XmlInferableAttribute : IInferableNode.IInferableAttribute
     {
         private readonly XAttribute _attribute;
 
@@ -33,7 +33,24 @@ internal class XmlInferableList : IInferableNode
 
         public string Key => _attribute.Name.LocalName;
 
-        public DataCenterTypeCode TypeCode => DataCenterTypeCode.String;
+        public DataCenterTypeCode TypeCode => InferType(_attribute.Value);
+
+        private static DataCenterTypeCode InferType(string value)
+        {
+            return value switch
+            {
+                "true" or "false" => DataCenterTypeCode.Boolean,
+                var x when IntRegex().IsMatch(x) => DataCenterTypeCode.Int32,
+                var x when SingleRegex().IsMatch(x) => DataCenterTypeCode.Single,
+                _ => DataCenterTypeCode.String,
+            };
+        }
+
+        [GeneratedRegex("[0-9]+")]
+        private static partial Regex IntRegex();
+
+        [GeneratedRegex("[0-9]+(\\.[0-9]+)?")]
+        private static partial Regex SingleRegex();
     }
 
     private readonly List<XElement> _nodes;
