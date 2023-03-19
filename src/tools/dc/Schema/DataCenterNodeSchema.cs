@@ -38,6 +38,8 @@ internal sealed class DataCenterNodeSchema
                 {
                     IsOptional = nodeExistedBefore,
                 };
+
+                attr.TypeCode = ResolveValueType(attr.TypeCode, code);
             }
             else
                 Attributes[name].IsOptional = true;
@@ -79,5 +81,15 @@ internal sealed class DataCenterNodeSchema
             edge ??= new(new());
 
         return edge;
+    }
+
+    private static DataCenterTypeCode ResolveValueType(DataCenterTypeCode first, DataCenterTypeCode second)
+    {
+        return (first, second) switch
+        {
+            var (a, b) when a == b => a,
+            (DataCenterTypeCode.Int32, DataCenterTypeCode.Single) or (DataCenterTypeCode.Single, DataCenterTypeCode.Int32) => DataCenterTypeCode.Single,
+            _ => DataCenterTypeCode.String,
+        };
     }
 }
