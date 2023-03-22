@@ -41,7 +41,9 @@
         <xsd:attribute name="blendInTime" type="xsd:float" />
         <xsd:attribute name="blendTime" type="xsd:float" />
         <xsd:attribute name="blink" type="xsd:boolean" />
+        <xsd:attribute name="complete" type="xsd:boolean" />
         <xsd:attribute name="cueName" type="xsd:string" />
+        <xsd:attribute name="dPadTextId" type="xsd:int" />
         <xsd:attribute name="dPadTextIdList" type="xsd:string" />
         <xsd:attribute name="despawnScriptId" type="xsd:int" />
         <xsd:attribute name="dir" type="xsd:int" />
@@ -56,6 +58,7 @@
         <xsd:attribute name="huntingZoneId" type="xsd:int" />
         <xsd:attribute name="isFinal" type="xsd:boolean" />
         <xsd:attribute name="isOnlyPlayerTarget" type="xsd:boolean" />
+        <xsd:attribute name="keyTextId" type="xsd:int" />
         <xsd:attribute name="keyTextIdList" type="xsd:string" />
         <xsd:attribute name="message" type="xsd:string" />
         <xsd:attribute name="moveAnim" type="xsd:string" />
@@ -92,6 +95,7 @@
         <xsd:attribute name="visibility" type="xsd:boolean" />
         <xsd:attribute name="volume" type="xsd:float" />
         <xsd:attribute name="waitAnim" type="xsd:string" />
+        <xsd:attribute name="xPadTextId" type="xsd:int" />
         <xsd:attribute name="xPadTextIdList" type="xsd:string" />
         <xsd:attribute name="yaw" type="xsd:float" />
     </xsd:complexType>

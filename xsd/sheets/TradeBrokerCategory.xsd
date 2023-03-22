@@ -20,7 +20,6 @@
     </xsd:complexType>
 
     <xsd:complexType name="TradeBrokerCategory_OptionCategory">
-        <xsd:attribute name="desc" type="xsd:string" use="required" />
         <xsd:attribute name="id" type="xsd:int" use="required" />
         <xsd:attribute name="name" type="xsd:string" use="required" />
     </xsd:complexType>

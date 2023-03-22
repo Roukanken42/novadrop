@@ -29,6 +29,7 @@
         <xsd:attribute name="eraseWhenDead" type="xsd:boolean" />
         <xsd:attribute name="hideHPBar" type="xsd:boolean" />
         <xsd:attribute name="huntingZoneId" type="xsd:int" use="required" />
+		<xsd:attribute name="layer" type="xsd:int" use="required" />
         <xsd:attribute name="range" type="xsd:int" use="required" />
         <xsd:attribute name="templateId" type="xsd:int" use="required" />
     </xsd:complexType>

@@ -25,10 +25,8 @@
             <xsd:element name="Param" type="WeaponMaterialParam_MaterialData_EnchantLevel_Param" maxOccurs="unbounded" />
         </xsd:sequence>
 
-        <xsd:attribute name="lowerEnchantLevel" type="xsd:int" />
-        <xsd:attribute name="materialId" type="xsd:int" use="required" />
-        <xsd:attribute name="upperEnchantLevel" type="xsd:int" />
-    </xsd:complexType>
+        <xsd:attribute name="level" type="xsd:int" use="required" />
+	</xsd:complexType>
 
     <xsd:complexType name="WeaponMaterialParam_MaterialData_EnchantLevel_Param">
         <xsd:attribute name="paramName" type="xsd:string" use="required" />

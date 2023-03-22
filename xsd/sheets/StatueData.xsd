@@ -10,8 +10,6 @@
             <xsd:element name="DaisCommonData" type="StatueData_DaisCommonData" />
             <xsd:element name="StatueSocialMotionData" type="StatueData_StatueSocialMotionData" maxOccurs="unbounded" />
         </xsd:sequence>
-
-        <xsd:attribute name="statueType" type="xsd:string" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="StatueData_DaisCommonData">

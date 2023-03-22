@@ -12,6 +12,7 @@
             <xsd:element name="ContentBanner" type="EventMatching_ContentBanner" />
             <xsd:element name="DailyCheckEvent" type="EventMatching_DailyCheckEvent" />
             <xsd:element name="DefaultEventImage" type="EventMatching_DefaultEventImage" />
+            <xsd:element name="EquipmentGuide" type="EventMatching_EquipmentGuide" />
             <xsd:element name="EventFilter" type="EventMatching_EventFilter" />
             <xsd:element name="EventGroup" type="EventMatching_EventGroup" maxOccurs="unbounded" />
             <xsd:element name="PlayGuideUI" type="EventMatching_PlayGuideUI" />
@@ -108,7 +109,10 @@
             <xsd:element name="Event" type="EventMatching_DailyCheckEvent_Event" maxOccurs="unbounded" />
         </xsd:sequence>
 
+        <xsd:attribute name="image" type="xsd:string" use="required" />
+        <xsd:attribute name="tipString" type="xsd:string" use="required" />
         <xsd:attribute name="totalCheckDay" type="xsd:int" use="required" />
+        <xsd:attribute name="uiString" type="xsd:string" use="required" />
         <xsd:attribute name="uiTitle" type="xsd:string" use="required" />
     </xsd:complexType>
 
@@ -126,6 +130,10 @@
     <xsd:complexType name="EventMatching_DefaultEventImage_DefaultImage">
         <xsd:attribute name="image" type="xsd:string" use="required" />
         <xsd:attribute name="type" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="EventMatching_EquipmentGuide">
+        <xsd:attribute name="targetItemLevel" type="xsd:int" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="EventMatching_EventFilter">
@@ -229,7 +237,7 @@
         <xsd:attribute name="enable" type="xsd:boolean" use="required" />
         <xsd:attribute name="showHotkey" type="xsd:boolean" use="required" />
         <xsd:attribute name="string" type="xsd:string" use="required" />
-        <xsd:attribute name="switch" type="xsd:boolean" use="required" />
+        <xsd:attribute name="switch" type="xsd:boolean" />
         <xsd:attribute name="uiName" type="xsd:string" use="required" />
     </xsd:complexType>
 

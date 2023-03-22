@@ -8,7 +8,6 @@
     <xsd:complexType name="WorldData">
         <xsd:sequence>
             <xsd:element name="AbnormalityEffectType" type="WorldData_AbnormalityEffectType" />
-            <xsd:element name="AbnormalityUI" type="WorldData_AbnormalityUI" />
             <xsd:element name="ActionKey" type="WorldData_ActionKey" />
             <xsd:element name="AutoLogout" type="WorldData_AutoLogout" />
             <xsd:element name="AutoRefreshServerList" type="WorldData_AutoRefreshServerList" />
@@ -26,7 +25,6 @@
             <xsd:element name="DamagePenetrationConst" type="WorldData_DamagePenetrationConst" />
             <xsd:element name="Death" type="WorldData_Death" />
             <xsd:element name="DungeonConfig" type="WorldData_DungeonConfig" />
-            <xsd:element name="DungeonResonance" type="WorldData_DungeonResonance" />
             <xsd:element name="EnchantIni" type="WorldData_EnchantIni" />
             <xsd:element name="FollowConfig" type="WorldData_FollowConfig" />
             <xsd:element name="Gachabox" type="WorldData_Gachabox" />
@@ -48,7 +46,6 @@
             <xsd:element name="ReactionCancel" type="WorldData_ReactionCancel" />
             <xsd:element name="RestrictionOpenList" type="WorldData_RestrictionOpenList" />
             <xsd:element name="SealItem" type="WorldData_SealItem" />
-            <xsd:element name="SeasonType" type="WorldData_SeasonType" />
             <xsd:element name="SkillConfig" type="WorldData_SkillConfig" />
             <xsd:element name="SkillDamageTypeConstant" type="WorldData_SkillDamageTypeConstant" />
             <xsd:element name="StackSystem" type="WorldData_StackSystem" />
@@ -64,18 +61,12 @@
             <xsd:element name="UserLevelLimit" type="WorldData_UserLevelLimit" />
             <xsd:element name="UserWarningHp" type="WorldData_UserWarningHp" />
             <xsd:element name="VillagePos" type="WorldData_VillagePos" />
-            <xsd:element name="WeakPointSystem" type="WorldData_WeakPointSystem" />
         </xsd:sequence>
     </xsd:complexType>
 
     <xsd:complexType name="WorldData_AbnormalityEffectType">
         <xsd:attribute name="id" type="xsd:int" use="required" />
         <xsd:attribute name="linkWeaponEnchantLevel" type="xsd:int" use="required" />
-    </xsd:complexType>
-
-    <xsd:complexType name="WorldData_AbnormalityUI">
-        <xsd:attribute name="deletePeriod" type="xsd:int" use="required" />
-        <xsd:attribute name="focusUILimitNum" type="xsd:int" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="WorldData_ActionKey">
@@ -572,6 +563,7 @@
     <xsd:complexType name="WorldData_StackSystem_Sorcerer">
         <xsd:sequence>
             <xsd:element name="AllSlotEffect" type="WorldData_StackSystem_Sorcerer_AllSlotEffect" />
+			<xsd:element name="EachSlotEffect" type="WorldData_StackSystem_Sorcerer_EachSlotEffect" />
         </xsd:sequence>
     </xsd:complexType>
 
@@ -585,6 +577,17 @@
         <xsd:attribute name="abnormalityId" type="xsd:int" use="required" />
         <xsd:attribute name="abnormalityStack" type="xsd:int" use="required" />
         <xsd:attribute name="effectScale" type="xsd:float" use="required" />
+    </xsd:complexType>
+	
+	<xsd:complexType name="WorldData_StackSystem_Sorcerer_EachSlotEffect">
+        <xsd:sequence>
+            <xsd:element name="Effect" type="WorldData_StackSystem_Sorcerer_EachSlotEffect_Effect" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+	
+	<xsd:complexType name="WorldData_StackSystem_Sorcerer_EachSlotEffect_Effect">
+        <xsd:attribute name="abnormalityId" type="xsd:int" use="required" />
+        <xsd:attribute name="slotIndex" type="xsd:int" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="WorldData_StackSystem_Warrior">
@@ -707,14 +710,6 @@
     <xsd:complexType name="WorldData_VillagePos_Tomb">
         <xsd:attribute name="areaName" type="xsd:string" use="required" />
     </xsd:complexType>
-
-    <xsd:complexType name="WorldData_WeakPointSystem">
-        <xsd:sequence>
-            <xsd:element name="Archer" type="WorldData_WeakPointSystem_Archer" />
-        </xsd:sequence>
-    </xsd:complexType>
-
-    <xsd:complexType name="WorldData_WeakPointSystem_Archer" />
 
     <xsd:element name="WorldData" type="WorldData" />
 </xsd:schema>

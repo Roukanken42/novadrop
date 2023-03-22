@@ -50,7 +50,6 @@
             <xsd:element name="ConditionalSkillData" type="ServantConfig_PartnerConfig_ConditionalSkillData" />
             <xsd:element name="PartnerEnergyEffect" type="ServantConfig_PartnerConfig_PartnerEnergyEffect" />
             <xsd:element name="PartnerMix" type="ServantConfig_PartnerConfig_PartnerMix" />
-            <xsd:element name="PresentItemList" type="ServantConfig_PartnerConfig_PresentItemList" />
         </xsd:sequence>
     </xsd:complexType>
 
@@ -113,7 +112,6 @@
 
     <xsd:complexType name="ServantConfig_PetConfig">
         <xsd:sequence>
-            <xsd:element name="FeedItemList" type="ServantConfig_PetConfig_FeedItemList" />
             <xsd:element name="PetEvolution" type="ServantConfig_PetConfig_PetEvolution" />
             <xsd:element name="PetLevel" type="ServantConfig_PetConfig_PetLevel" />
             <xsd:element name="PetMix" type="ServantConfig_PetConfig_PetMix" />

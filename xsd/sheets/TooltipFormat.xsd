@@ -360,7 +360,6 @@
             <xsd:element name="LinkedSkillLevelLimit" type="TooltipFormat_Item_LinkedSkillLevelLimit" />
             <xsd:element name="Maker" type="TooltipFormat_Item_Maker" />
             <xsd:element name="Name" type="TooltipFormat_Item_Name" />
-            <xsd:element name="OptionCategory" type="TooltipFormat_Item_OptionCategory" />
             <xsd:element name="OrbGrade" type="TooltipFormat_Item_OrbGrade" />
             <xsd:element name="PerformanceAttack" type="TooltipFormat_Item_PerformanceAttack" />
             <xsd:element name="PerformanceBalance" type="TooltipFormat_Item_PerformanceBalance" />
@@ -373,10 +372,8 @@
             <xsd:element name="PerformancePassivityLinkG" type="TooltipFormat_Item_PerformancePassivityLinkG" />
             <xsd:element name="PerformancePhysicalAttack" type="TooltipFormat_Item_PerformancePhysicalAttack" />
             <xsd:element name="PerformancePhysicalDefence" type="TooltipFormat_Item_PerformancePhysicalDefence" />
-            <xsd:element name="PerformanceResonanceSeal" type="TooltipFormat_Item_PerformanceResonanceSeal" />
             <xsd:element name="Period" type="TooltipFormat_Item_Period" />
             <xsd:element name="Price" type="TooltipFormat_Item_Price" />
-            <xsd:element name="RandomEquipmentNondbOption" type="TooltipFormat_Item_RandomEquipmentNondbOption" />
             <xsd:element name="Recipe" type="TooltipFormat_Item_Recipe" />
             <xsd:element name="ReputationInfo" type="TooltipFormat_Item_ReputationInfo" />
             <xsd:element name="RequiredLevel" type="TooltipFormat_Item_RequiredLevel" />
@@ -675,10 +672,6 @@
         <xsd:attribute name="unidentifiedTextId" type="xsd:int" use="required" />
     </xsd:complexType>
 
-    <xsd:complexType name="TooltipFormat_Item_OptionCategory">
-        <xsd:attribute name="textStyle" type="xsd:string" use="required" />
-    </xsd:complexType>
-
     <xsd:complexType name="TooltipFormat_Item_OrbGrade">
         <xsd:attribute name="textStyle" type="xsd:string" use="required" />
         <xsd:attribute name="titleId" type="xsd:int" use="required" />
@@ -765,11 +758,6 @@
         <xsd:attribute name="titleStyle" type="xsd:string" use="required" />
     </xsd:complexType>
 
-    <xsd:complexType name="TooltipFormat_Item_PerformanceResonanceSeal">
-        <xsd:attribute name="strengthStyle" type="xsd:string" use="required" />
-        <xsd:attribute name="textStyle" type="xsd:string" use="required" />
-    </xsd:complexType>
-
     <xsd:complexType name="TooltipFormat_Item_Period">
         <xsd:attribute name="infiniteItemInfoId" type="xsd:int" use="required" />
         <xsd:attribute name="infiniteItemTitleId" type="xsd:int" use="required" />
@@ -782,10 +770,6 @@
         <xsd:attribute name="sellPriceTextId" type="xsd:int" use="required" />
         <xsd:attribute name="textStyle" type="xsd:string" use="required" />
         <xsd:attribute name="tradePriceTextId" type="xsd:int" use="required" />
-    </xsd:complexType>
-
-    <xsd:complexType name="TooltipFormat_Item_RandomEquipmentNondbOption">
-        <xsd:attribute name="textStyle" type="xsd:string" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="TooltipFormat_Item_Recipe">
@@ -1061,7 +1045,6 @@
 
     <xsd:complexType name="TooltipFormat_Skill_CoolTime">
         <xsd:attribute name="crestTextStyle" type="xsd:string" use="required" />
-        <xsd:attribute name="crestTextStyleEx" type="xsd:string" use="required" />
         <xsd:attribute name="textStyle" type="xsd:string" use="required" />
         <xsd:attribute name="titleId" type="xsd:int" use="required" />
         <xsd:attribute name="titleStyle" type="xsd:string" use="required" />

@@ -8,6 +8,8 @@
     <xsd:complexType name="HeroWorldData">
         <xsd:sequence>
             <xsd:element name="AccountExp" type="HeroWorldData_AccountExp" />
+            <xsd:element name="BattlePassDailyMissionResetHour" type="HeroWorldData_BattlePassDailyMissionResetHour" />
+            <xsd:element name="BattlePassSeasonProduct" type="HeroWorldData_BattlePassSeasonProduct" />
             <xsd:element name="CombatItemTypeStringData" type="HeroWorldData_CombatItemTypeStringData" />
             <xsd:element name="DefaultTownSpwanLocation" type="HeroWorldData_DefaultTownSpwanLocation" />
             <xsd:element name="GachaBoxOpen" type="HeroWorldData_GachaBoxOpen" />
@@ -33,6 +35,22 @@
     <xsd:complexType name="HeroWorldData_AccountExp_Exp">
         <xsd:attribute name="expNeeded" type="xsd:string" use="required" />
         <xsd:attribute name="level" type="xsd:int" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="HeroWorldData_BattlePassDailyMissionResetHour">
+        <xsd:attribute name="resetLocalHour" type="xsd:int" use="required" />
+    </xsd:complexType>
+
+    <xsd:complexType name="HeroWorldData_BattlePassSeasonProduct">
+        <xsd:sequence>
+            <xsd:element name="BattlePassSeason" type="HeroWorldData_BattlePassSeasonProduct_BattlePassSeason" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="HeroWorldData_BattlePassSeasonProduct_BattlePassSeason">
+        <xsd:attribute name="battlePassHeroSkin" type="xsd:string" use="required" />
+        <xsd:attribute name="battlePassTokenShopHeroSkin" type="xsd:string" use="required" />
+        <xsd:attribute name="seasonId" type="xsd:int" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="HeroWorldData_CombatItemTypeStringData">

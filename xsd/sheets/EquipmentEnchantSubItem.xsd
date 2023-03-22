@@ -28,6 +28,7 @@
 
     <xsd:complexType name="EquipmentEnchantSubItem_DefineEnchantData_EnchantData_Enchant">
         <xsd:attribute name="avoidDamagedAmount" type="xsd:int" />
+        <xsd:attribute name="avoidDropAmount" type="xsd:int" />
         <xsd:attribute name="enchantStep" type="xsd:int" use="required" />
     </xsd:complexType>
 

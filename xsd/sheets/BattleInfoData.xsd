@@ -16,7 +16,6 @@
         <xsd:sequence>
             <xsd:element name="AttackWeight" type="BattleInfoData_DamageText_AttackWeight" />
             <xsd:element name="DamageTextForm" type="BattleInfoData_DamageText_DamageTextForm" />
-            <xsd:element name="FontPositionSetting" type="BattleInfoData_DamageText_FontPositionSetting" />
             <xsd:element name="FontSizeAdjustment" type="BattleInfoData_DamageText_FontSizeAdjustment" />
             <xsd:element name="ScaleDistance" type="BattleInfoData_DamageText_ScaleDistance" />
         </xsd:sequence>
@@ -54,10 +53,6 @@
         <xsd:attribute name="prefix" type="xsd:string" />
         <xsd:attribute name="ratio" type="xsd:float" use="required" />
         <xsd:attribute name="type" type="xsd:string" use="required" />
-    </xsd:complexType>
-
-    <xsd:complexType name="BattleInfoData_DamageText_FontPositionSetting">
-        <xsd:attribute name="fixedFontZOffset" type="xsd:float" use="required" />
     </xsd:complexType>
 
     <xsd:complexType name="BattleInfoData_DamageText_FontSizeAdjustment">

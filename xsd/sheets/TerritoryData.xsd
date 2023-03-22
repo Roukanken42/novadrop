@@ -56,6 +56,7 @@
         </xsd:sequence>
 
         <xsd:attribute name="ai" type="xsd:int" use="required" />
+        <xsd:attribute name="canbeattacked" type="xsd:boolean" />
         <xsd:attribute name="canGetBuff" type="xsd:boolean" />
         <xsd:attribute name="dir" type="xsd:int" use="required" />
         <xsd:attribute name="friendOfPlayer" type="xsd:boolean" />
@@ -97,6 +98,7 @@
         </xsd:sequence>
 
         <xsd:attribute name="ai" type="xsd:int" use="required" />
+        <xsd:attribute name="canbeattacked" type="xsd:boolean" />
         <xsd:attribute name="canGetBuff" type="xsd:boolean" />
         <xsd:attribute name="friendOfPlayer" type="xsd:boolean" />
         <xsd:attribute name="villager" type="xsd:boolean" />

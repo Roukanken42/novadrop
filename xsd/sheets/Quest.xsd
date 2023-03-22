@@ -104,7 +104,7 @@
             <xsd:element name="종족" type="Quest_Header_수행조건_종족" minOccurs="0" />
             <xsd:element name="초과레벨" type="Quest_Header_수행조건_초과레벨" minOccurs="0" />
             <xsd:element name="최대레벨" type="Quest_Header_수행조건_최대레벨" minOccurs="0" />
-            <xsd:element name="최소레벨" type="Quest_Header_수행조건_최소레벨" />
+            <xsd:element name="최소레벨" type="Quest_Header_수행조건_최소레벨" minOccurs="0" />
             <xsd:element name="최소장비레벨" type="Quest_Header_수행조건_최소장비레벨" minOccurs="0" />
             <xsd:element name="클래스" type="Quest_Header_수행조건_클래스" minOccurs="0" />
         </xsd:sequence>

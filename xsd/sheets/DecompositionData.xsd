@@ -10,7 +10,7 @@
             <xsd:element name="Decomposition" type="DecompositionData_Decomposition" maxOccurs="unbounded" />
         </xsd:sequence>
 
-        <xsd:attribute name="progressTime" type="xsd:int" use="required" />
+        <xsd:attribute name="progressTime" type="xsd:int" />
     </xsd:complexType>
 
     <xsd:complexType name="DecompositionData_Decomposition">
