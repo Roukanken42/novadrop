@@ -8,7 +8,7 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
     public sealed class SchemaCommandSettings : CommandSettings
     {
         [CommandArgument(0, "<input>")]
-        [Description("Input file")]
+        [Description("Input file or directory")]
         public string Input { get; }
 
         [CommandArgument(1, "<output>")]
@@ -37,11 +37,23 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         [Description("Enable output subdirectories based on data sheet names")]
         public bool Subdirectories { get; init; }
 
+        [CommandOption("--unpacked")]
+        [Description("Try to infer schema from unpacked datacenter instead")]
+        public bool Unpacked { get; init; }
+
         public SchemaCommandSettings(string input, string output)
         {
             Input = input;
             Output = output;
         }
+    }
+
+    protected override Task PreExecuteAsync(
+        dynamic expando, SchemaCommandSettings settings, CancellationToken cancellationToken)
+    {
+        expando.Handler = new DataSheetValidationHandler();
+
+        return Task.CompletedTask;
     }
 
     protected override async Task<int> ExecuteAsync(
@@ -69,29 +81,16 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         Log.MarkupLineInterpolated(
             $"Inferring data sheet schemas of [cyan]{settings.Input}[/] to [cyan]{settings.Output}[/] with strategy [cyan]{settings.Strategy}[/]...");
 
-        var root = await progress.RunTaskAsync(
-            "Load data center",
-            async () =>
-            {
-                await using var inStream = File.OpenRead(settings.Input);
-
-                return await DataCenter.LoadAsync(
-                    inStream,
-                    new DataCenterLoadOptions()
-                        .WithKey(settings.DecryptionKey.Span)
-                        .WithIV(settings.DecryptionIV.Span)
-                        .WithStrict(settings.Strict)
-                        .WithLoaderMode(DataCenterLoaderMode.Eager)
-                        .WithMutability(DataCenterMutability.Immutable),
-                    cancellationToken);
-            });
+        ISchemaInferable schemaInferable = settings.Unpacked
+            ? await LoadXmlInferableAsync(expando, settings, progress, cancellationToken)
+            : await LoadDataCenterInferableAsync(settings, progress, cancellationToken);
 
         var schema = await progress.RunTaskAsync(
             "Infer data sheet schemas",
-            root.Children.Count,
+            schemaInferable.Children.Count,
             increment =>
                 Task.FromResult(
-                    DataCenterSchemaInference.Infer(settings.Strategy, root, increment, cancellationToken)));
+                    DataCenterSchemaInference.Infer(settings.Strategy, schemaInferable, increment, cancellationToken)));
 
         var output = new DirectoryInfo(settings.Output);
 
@@ -143,6 +142,77 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
             });
 
         return 0;
+    }
+
+    private static async Task<ISchemaInferable> LoadDataCenterInferableAsync(SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
+    {
+        var root = await progress.RunTaskAsync(
+            "Load data center",
+            async () =>
+            {
+                await using var inStream = File.OpenRead(settings.Input);
+
+                return await DataCenter.LoadAsync(
+                    inStream,
+                    new DataCenterLoadOptions()
+                        .WithKey(settings.DecryptionKey.Span)
+                        .WithIV(settings.DecryptionIV.Span)
+                        .WithStrict(settings.Strict)
+                        .WithLoaderMode(DataCenterLoaderMode.Eager)
+                        .WithMutability(DataCenterMutability.Immutable),
+                    cancellationToken);
+            });
+
+        return new DataCenterSchemaInferable(root);
+    }
+
+    private static async Task<ISchemaInferable> LoadXmlInferableAsync(dynamic expando, SchemaCommandSettings settings, ProgressContext progress, CancellationToken cancellationToken)
+    {
+        var files = await progress.RunTaskAsync(
+            "Gather data sheet files",
+            () => Task.FromResult(
+                new DirectoryInfo(settings.Input)
+                    .EnumerateFiles("?*.?*", SearchOption.AllDirectories)
+                    .Where(f => f.Extension is ".xml" or ".quest" or ".condition")
+                    .OrderBy(f => f.FullName, StringComparer.Ordinal)
+                    .Select((f, i) => (Index: i, File: f))
+                    .ToArray()));
+
+        var handler = (DataSheetValidationHandler)expando.Handler;
+
+        var nodes = await progress.RunTaskAsync(
+            "Load data sheets",
+            files.Length,
+            increment => Task.WhenAll(
+                files
+                    .AsParallel()
+                    .WithCancellation(cancellationToken)
+                    .Select(item => Task.Run(
+                        async () =>
+                        {
+                            var file = item.File;
+                            var xmlSettings = new XmlReaderSettings { Async = true };
+
+                            using var reader = XmlReader.Create(file.FullName, xmlSettings);
+
+                            XDocument? doc = null;
+
+                            try
+                            {
+                                doc = await XDocument.LoadAsync(reader, LoadOptions.None, cancellationToken);
+                            }
+                            catch (XmlException ex)
+                            {
+                                handler.HandleException(file, ex);
+                            }
+
+                            increment();
+                            return doc?.Root;
+                        },
+                        cancellationToken))));
+
+        var nonNullNodes = from node in nodes where node is not null select node;
+        return new XmlSchemaInferable(nonNullNodes.ToList());
     }
 
     private static async Task WriteSchemaAsync(
@@ -292,5 +362,13 @@ internal sealed class SchemaCommand : CancellableAsyncCommand<SchemaCommand.Sche
         }
 
         await textWriter.WriteLineAsync();
+    }
+
+    protected override Task PostExecuteAsync(
+        dynamic expando, SchemaCommandSettings settings, CancellationToken cancellationToken)
+    {
+        expando.Handler.Print();
+
+        return Task.CompletedTask;
     }
 }

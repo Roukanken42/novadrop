@@ -2,7 +2,7 @@ namespace Vezel.Novadrop.Schema;
 
 internal sealed class DataCenterAttributeSchema
 {
-    public DataCenterTypeCode TypeCode { get; }
+    public DataCenterTypeCode TypeCode { get; set; }
 
     public bool IsOptional { get; set; }
 
