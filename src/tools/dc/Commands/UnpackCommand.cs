@@ -126,7 +126,7 @@ internal sealed class UnpackCommand : CancellableAsyncCommand<UnpackCommand.Unpa
 
                 return Parallel.ForEachAsync(
                     sheets
-                        .GroupBy(n => n.Name, (name, elems) => elems.Select((n, i) => (Node: n, Index: i)))
+                        .GroupBy(n => n.Name, (name, elems) => NameGroupOfOutputFiles(elems))
                         .SelectMany(elems => elems),
                     cancellationToken,
                     async (item, cancellationToken) =>
@@ -134,7 +134,7 @@ internal sealed class UnpackCommand : CancellableAsyncCommand<UnpackCommand.Unpa
                         var node = item.Node;
 
                         await using var textWriter = new StreamWriter(Path.Combine(
-                            output.CreateSubdirectory(node.Name).FullName, $"{node.Name}-{item.Index:d5}.xml"));
+                            output.CreateSubdirectory(node.Name).FullName, item.FileName));
 
                         await using (var xmlWriter = XmlWriter.Create(textWriter, xmlSettings))
                         {
@@ -181,6 +181,45 @@ internal sealed class UnpackCommand : CancellableAsyncCommand<UnpackCommand.Unpa
             });
 
         return 0;
+    }
+
+    private static readonly Dictionary<string, List<string>> _namings = new()
+    {
+        { "Accessory", new() { "id" } },
+        { "Area", new() { "continentId", "areaName" } },
+        { "ClimbingTerritory", new() { "continentId", "areaName" } },
+        { "Dungeon", new() { "continentId" } },
+        { "TerritoryData", new() { "huntingZoneId" } },
+        { "ShieldTerritory", new() { "continentId", "areaName" } },
+        { "SkillData", new() { "huntingZoneId", "templateId" } },
+        { "Quest", new() { "id" } },
+        { "QuestDialog", new() { "huntingZoneId", "id" } },
+        { "NpcData", new() { "huntingZoneId" } },
+        { "NpcSoundData", new() { "huntingZoneId" } },
+        { "VillagerDialog", new() { "huntingZoneId", "id" } },
+        { "MovieScript", new() { "id" } },
+    };
+
+    private static string NameOutputFile(DataCenterNode node)
+    {
+        var specifier = _namings.TryGetValue(node.Name, out var keys)
+            ? string.Join(
+                '-',
+                keys
+                    .Where(s => node.Attributes.ContainsKey(s) && node.Attributes[s].ToString() != "0")
+                    .Select(key => $"{key}-{node.Attributes[key]}"))
+            : string.Empty;
+        return string.IsNullOrEmpty(specifier) ? $"{node.Name}" : $"{node.Name}-{specifier}";
+    }
+
+    private static IEnumerable<(DataCenterNode Node, string FileName)> NameGroupOfOutputFiles(IEnumerable<DataCenterNode> nodes)
+    {
+        return nodes
+            .GroupBy(NameOutputFile)
+            .SelectMany(group =>
+                group.Count() == 1
+                    ? group.Select(node => (node, $"{group.Key}.xml"))
+                    : group.Select((node, index) => (node, $"{group.Key}-{index:d5}.xml")));
     }
 
     protected override Task PostExecuteAsync(

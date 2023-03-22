@@ -55,7 +55,7 @@ internal sealed class PackCommand : CancellableAsyncCommand<PackCommand.PackComm
             "Gather data sheet files",
             () => Task.FromResult(
                 new DirectoryInfo(settings.Input)
-                    .EnumerateFiles("?*-?*.xml", SearchOption.AllDirectories)
+                    .EnumerateFiles("?*.xml", SearchOption.AllDirectories)
                     .OrderBy(f => f.FullName, StringComparer.Ordinal)
                     .Select((f, i) => (Index: i, File: f))
                     .ToArray()));
