@@ -1,0 +1,40 @@
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns:dc="https://vezel.dev/novadrop/dc"
+            xmlns="https://vezel.dev/novadrop/dc/WeakPointEffectAttachBone"
+            targetNamespace="https://vezel.dev/novadrop/dc/WeakPointEffectAttachBone"
+            xsi:schemaLocation="https://vezel.dev/novadrop/dc ../DataCenter.xsd"
+            elementFormDefault="qualified">
+    <xsd:complexType name="WeakPointEffectAttachBone">
+        <xsd:sequence>
+            <xsd:element name="EffectAttachBoneInfo" type="WeakPointEffectAttachBone_EffectAttachBoneInfo" maxOccurs="unbounded" />
+			<xsd:element name="NpcData" type="WeakPointEffectAttachBone_NpcData" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="WeakPointEffectAttachBone_EffectAttachBoneInfo">
+        <xsd:sequence>
+            <xsd:element name="AttachBone" type="WeakPointEffectAttachBone_EffectAttachBoneInfo_AttachBone" maxOccurs="unbounded" />
+        </xsd:sequence>
+    </xsd:complexType>
+
+    <xsd:complexType name="WeakPointEffectAttachBone_NpcData">
+        <xsd:sequence>
+            <xsd:element name="AttachBone" type="WeakPointEffectAttachBone_NpcData_AttachBone" maxOccurs="unbounded" />
+        </xsd:sequence>
+
+        <xsd:attribute name="templateId" type="xsd:int" use="required" />
+		<xsd:attribute name="huntingZone" type="xsd:int" use="required" />
+	</xsd:complexType>
+
+    <xsd:complexType name="WeakPointEffectAttachBone_EffectAttachBoneInfo_AttachBone">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+		<xsd:attribute name="priority" type="xsd:int" />
+    </xsd:complexType>
+	
+	<xsd:complexType name="WeakPointEffectAttachBone_NpcData_AttachBone">
+        <xsd:attribute name="name" type="xsd:string" use="required" />
+    </xsd:complexType>
+
+    <xsd:element name="WeakPointEffectAttachBone" type="WeakPointEffectAttachBone" />
+</xsd:schema>
