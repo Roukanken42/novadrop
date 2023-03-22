@@ -16,12 +16,12 @@ internal sealed class UnpackCommand : CancellableAsyncCommand<UnpackCommand.Unpa
         [CommandOption("--decryption-key <key>")]
         [Description("Set decryption key")]
         [TypeConverter(typeof(HexStringConverter))]
-        public ReadOnlyMemory<byte> DecryptionKey { get; init; } = DataCenter.LatestKey;
+        public ReadOnlyMemory<byte> DecryptionKey { get; init; } = DataCenter.Build100Key;
 
         [CommandOption("--decryption-iv <iv>")]
         [Description("Set decryption IV")]
         [TypeConverter(typeof(HexStringConverter))]
-        public ReadOnlyMemory<byte> DecryptionIV { get; init; } = DataCenter.LatestIV;
+        public ReadOnlyMemory<byte> DecryptionIV { get; init; } = DataCenter.Build100IV;
 
         [CommandOption("--strict")]
         [Description("Enable strict verification")]

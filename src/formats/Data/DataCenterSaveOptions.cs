@@ -6,9 +6,9 @@ public sealed class DataCenterSaveOptions
 
     public CompressionLevel CompressionLevel { get; private set; }
 
-    public ReadOnlyMemory<byte> Key { get; private set; } = DataCenter.LatestKey;
+    public ReadOnlyMemory<byte> Key { get; private set; } = DataCenter.Build100Key;
 
-    public ReadOnlyMemory<byte> IV { get; private set; } = DataCenter.LatestIV;
+    public ReadOnlyMemory<byte> IV { get; private set; } = DataCenter.Build100IV;
 
     private DataCenterSaveOptions Clone()
     {

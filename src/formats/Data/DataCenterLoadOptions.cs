@@ -2,9 +2,9 @@ namespace Vezel.Novadrop.Data;
 
 public sealed class DataCenterLoadOptions
 {
-    public ReadOnlyMemory<byte> Key { get; private set; } = DataCenter.LatestKey;
+    public ReadOnlyMemory<byte> Key { get; private set; } = DataCenter.Build100Key;
 
-    public ReadOnlyMemory<byte> IV { get; private set; } = DataCenter.LatestIV;
+    public ReadOnlyMemory<byte> IV { get; private set; } = DataCenter.Build100IV;
 
     public bool Strict { get; private set; }
 
